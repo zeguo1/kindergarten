@@ -1,20 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
     <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="../static/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link href="../static/css/theme.css" rel="stylesheet" media="screen">
     <title>三明路小一班健康码统计系统</title>
 </head>
 <body>
-<div align="center">
-    <h1>三明路幼儿园小一班</h1>
-    <h2>健康码统计系统</h2>
-    <br>
-    <form action="" enctype='multipart/form-data' method='POST'>
-        <label for="file" class="btn btn-primary">选择照片包</label>
-        <input id="file" type="file" style="display:none" name="file">
-        <input type="submit" class="btn btn-success" value="上传并处理">
-    </form>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="../">三明路小一班健康码统计系统</a>
+        </div>
+    </div>
+</nav>
+<div class="container theme-showcase" role="main">
+    <div class="jumbotron">
+        <h2>健康码上传</h2>
+        <p>点击选择文件按钮选择需要上传的图片压缩包或Excle后，点击上传并获取结果。</p>
+        <form action="" enctype='multipart/form-data' method='POST'>
+            <label for="file" class="btn btn-primary">选择文件</label>
+            <input id="file" type="file" style="display:none" name="file">
+            <input type="submit" class="btn btn-success" value="上传并处理">
+        </form>
+    </div>
 </div>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/docs.min.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="500" viewBox="0 0 1140 500" preserveAspectRatio="none"
+     style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;">
+    <defs>
+        <style type="text/css"></style>
+    </defs>
+    <text x="0" y="57" style="font-weight:bold;font-size:57pt;font-family:Arial, Helvetica, Open Sans, sans-serif">
+        Thirdslide
+    </text>
+</svg>
 </body>
 </html>
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen">#}
+{#    <title>三明路小一班健康码统计系统</title>#}
+{#</head>#}
+{#<body>#}
+{#<div align="center">#}
+{#    <h1>三明路幼儿园小一班</h1>#}
+{#    <h2>健康码统计系统</h2>#}
+{#    <br>#}
+{#    <form action="" enctype='multipart/form-data' method='POST'>#}
+{#        <label for="file" class="btn btn-primary">选择照片包</label>#}
+{#        <input id="file" type="file" style="display:none" name="file">#}
+{#        <input type="submit" class="btn btn-success" value="上传并处理">#}
+{#    </form>#}
+{#</div>#}
+{#</body>#}
+{#</html>#}

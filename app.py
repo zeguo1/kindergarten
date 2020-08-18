@@ -13,7 +13,7 @@ if not os.path.exists(app.config['DOWNLOAD_FOLDER']):
     os.makedirs(app.config['DOWNLOAD_FOLDER'])
 
 @app.route('/', methods=['POST', 'GET'])
-def upload():
+def child():
     if request.method == 'POST':
         f = request.files['file']
         if f.filename == "":
@@ -24,12 +24,19 @@ def upload():
             os.makedirs(uploadpath)
         filename = time.strftime("%Y%m%d%H%M%S", time.localtime())+"_"+secure_filename(f.filename)
         f.save(uploadpath+filename)
-        return redirect(url_for('uploaded_file', filename=processfile.get_word(uploadpath,filename)))
+        return render_template('result.html',result=processfile.zip_get_result(uploadpath,filename))
+        # return redirect(url_for('uploaded_file', filename=processfile.get_word(uploadpath,filename)))
     return render_template('upload.html')
 
 @app.route('/download/<filename>')
-def uploaded_file(filename):
+def download_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
+
+
+# @app.route('/download/<filename>')
+# def download(filename):
+#     return None
+
 
 if __name__ == '__main__':
     app.run()
