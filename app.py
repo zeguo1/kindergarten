@@ -1,12 +1,13 @@
 # coding:utf-8
 
-from flask import Flask,render_template,request,redirect,url_for,send_from_directory
+from flask import Flask,render_template,request,redirect,url_for,send_from_directory,flash
 from werkzeug.utils import secure_filename
 import processfile
 import time
 import os
 
 app = Flask(__name__)
+app.secret_key="qindklkdjfwie"
 app.config['DOWNLOAD_FOLDER']='static/download/'
 
 if not os.path.exists(app.config['DOWNLOAD_FOLDER']):
@@ -18,7 +19,8 @@ def child():
         f = request.files['file']
         if f.filename == "":
             app.logger.info('没有选择文件')
-            return redirect(url_for(''))
+            flash('没有选择文件')
+            return redirect(url_for('child'))
         uploadpath = "static/uploads/"
         if not os.path.exists(uploadpath):
             os.makedirs(uploadpath)

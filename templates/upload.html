@@ -24,11 +24,11 @@
     <div class="jumbotron">
         <h2>健康码上传</h2>
         <p>点击选择文件按钮选择需要上传的图片压缩包或Excle后，点击上传并获取结果。</p>
-        <form action="" enctype='multipart/form-data' method='POST'>
-            <label for="file" class="btn btn-primary">选择文件</label>
-            <input id="file" type="file" style="display:none" name="file">
-            <input type="submit" class="btn btn-success" value="上传并处理">
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" class="span3" style="float: left;">
+            <input type="submit" value="上传并处理" class="btn btn-success">
         </form>
+        <h4>{{ get_flashed_messages()[0] }}</h4>
     </div>
 </div>
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
@@ -45,25 +45,6 @@
         Thirdslide
     </text>
 </svg>
+
 </body>
 </html>
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen">#}
-{#    <title>三明路小一班健康码统计系统</title>#}
-{#</head>#}
-{#<body>#}
-{#<div align="center">#}
-{#    <h1>三明路幼儿园小一班</h1>#}
-{#    <h2>健康码统计系统</h2>#}
-{#    <br>#}
-{#    <form action="" enctype='multipart/form-data' method='POST'>#}
-{#        <label for="file" class="btn btn-primary">选择照片包</label>#}
-{#        <input id="file" type="file" style="display:none" name="file">#}
-{#        <input type="submit" class="btn btn-success" value="上传并处理">#}
-{#    </form>#}
-{#</div>#}
-{#</body>#}
-{#</html>#}
