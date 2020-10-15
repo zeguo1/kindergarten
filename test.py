@@ -35,7 +35,6 @@ def cookie_login():
     except Exception:
         print("Cookies未能加载，使用密码登录")
         login()
-
     else:
         verify_login()
 
@@ -43,8 +42,8 @@ def verify_login():
     mine_response = local_session.get(url=config.get('wjx').get('mine_url'), headers=headers)
     soup = BeautifulSoup(mine_response.text, 'lxml')
     if soup.find_all(text=config.get('wjx').get('username')):
-        print(soup.find_all(text=config.get('wjx').get('username')))
-        return 'success';
+        print(soup.find_all(text=config.get('wjx').get('username'))+'登录成功')
+        # return 'login success';
     else:
         login()
 
@@ -66,8 +65,13 @@ def login():
         else:
             data[i.attrs['name']] = i.attrs['value']
     login = local_session.post(url=basepage.url, headers=headers, data=data)
-    local_session.cookies.save()
-    print('登录成功')
+    soup = BeautifulSoup(login.text, 'lxml')
+    if soup.find_all(text=config.get('wjx').get('username')):
+        local_session.cookies.save()
+        print('用户名密码登录成功')
+    else:
+        print('登录失败'+soup.find(class_='submit-wrapper').span.text)
+
 
 
 # def url2Dict(url):
@@ -205,7 +209,7 @@ def get_excle(year,month,day):
         elif all_student[i]['status'] == 0:
             undo_list[all_student[i]['name']] = i
     # get_images(exclepath)
-    print(undo_list)
+    print('未提交名单:'+undo_list)
     doc = Document()
     doc.styles['Normal'].font.name = u'文星标宋'
     doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'文星标宋')
@@ -227,7 +231,7 @@ def get_excle(year,month,day):
             run = doc.add_paragraph().add_run()
             (img,false_list)=download_image(all_student[i]['url'], all_student[i]['name'],false_list)
             run.add_picture(img, width=Inches(3))
-    print(false_list)
+    print('失败列表：'+false_list)
     downloadpath = 'static/download/'
     downloadfilename = '三明路小一班健康码' + time.strftime("%Y%m%d", time.localtime()) + '.docx'
     doc.save(downloadpath + downloadfilename)  # 保存路径
