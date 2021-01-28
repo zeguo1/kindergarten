@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>小一班{{ date }}健康码提交情况汇总</h1>
+        </div>
+    </div>
+    <div class="container">
+        {% block page_content %}
+            <div class="jumbotron">
+                {% if result.undo_size ==0 %}
+                    <p>小一班共计40人，全部健康码已提交，已经删除重复提交{{ result.repeat_size }}人。点击下方按钮下载健康码汇总材料。</p>
+                    <a href="{{ url_for('download_file',filename= result.filename) }}" methods="GET">
+                        <button type="button" class="btn btn-lg btn-primary">下载汇总文档</button>
+                    </a>
+                {% else %}
+                    <p>小一班共计40人，其中已提交{{ result.student_size }}人，未提交{{ result.undo_size }}人，已经删除重复提交{{ result.repeat_size }}人。</p>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="page-header">
+                        <h3>已提交学生名单({{ result.student_size }}人)</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>已提交序号</th>
+                            <th>已提交学生姓名</th>
+                        </tr>
+                        {% for key, value in result.student.items() %}
+                            <tr>
+                                <td> {{ value }} </td>
+                                {% if key in result.repeat.values() %}
+                                    <th style="background-color: lightseagreen;"> {{ key }} </th>
+                                {% else %}
+                                    <th> {{ key }} </th>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-5">
+                    <div class="page-header">
+                        <h3>删除重复提交学生名单({{ result.repeat_size }}人)</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>重复提交序号</th>
+                            <th>重复提交学生姓名</th>
+                        </tr>
+                        {% for key, value in result.repeat.items() %}
+                            <tr>
+                                <th> {{ key }} </th>
+                                <td style="background-color: lightseagreen;"> {{ value }} </td>
+                            </tr>
+                        {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h3>未提交学生名单({{ result.undo_size }}人)</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>未提交学生姓名</th>
+                        </tr>
+                        {% for key, value in result.undo.items() %}
+                            <tr>
+                                <th> {{ key }} </th>
+                            </tr>
+                        {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

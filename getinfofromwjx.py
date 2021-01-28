@@ -1,5 +1,4 @@
 # coding:utf-8
-from zipfile import ZipFile
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.oxml.ns import qn
@@ -8,13 +7,10 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from io import BytesIO
 from PIL import Image
 import time
-from config import config
-
-from urllib.parse import unquote
-from urllib import parse
+import config
 
 from bs4 import BeautifulSoup
-import http.client, mimetypes, urllib, json, requests, os
+import urllib, requests, os
 import datetime
 
 import xlrd
@@ -25,7 +21,7 @@ from http.cookiejar import LWPCookieJar
 local_session = requests.Session()
 local_session.cookies = LWPCookieJar(filename='wjxCookies.txt')
 
-headers = config.get('wjx').get('headers')
+headers = config.config().readYaml().get('wjx').get('headers')
 
 def cookie_login():
     try:
@@ -39,26 +35,26 @@ def cookie_login():
         verify_login()
 
 def verify_login():
-    mine_response = local_session.get(url=config.get('wjx').get('mine_url'), headers=headers)
+    mine_response = local_session.get(url=config.config().readYaml().get('wjx').get('mine_url'), headers=headers)
     soup = BeautifulSoup(mine_response.text, 'lxml')
-    if soup.find_all(text=config.get('wjx').get('username')):
-        print(soup.find_all(text=config.get('wjx').get('username')))
+    if soup.find_all(text=config.config().readYaml().get('wjx').get('username')):
+        print(soup.find_all(text=config.config().readYaml().get('wjx').get('username')))
         print('登录成功')
         # return 'login success';
     else:
         login()
 
 def login():
-    baseurl = config.get('wjx').get('login_url')
+    baseurl = config.config().readYaml().get('wjx').get('login_url')
     basepage = local_session.get(url=baseurl, headers=headers)
     data = {}
     soup = BeautifulSoup(basepage.text, 'lxml')
     # a = soup.findAll("input", {"type": "hidden"})
     for i in soup.findAll("input"):
         if i.attrs['name'] == 'UserName':
-            data[i.attrs['name']] = config.get('wjx').get('username')
+            data[i.attrs['name']] = config.config().readYaml().get('wjx').get('username')
         elif i.attrs['name'] == 'Password':
-            data[i.attrs['name']] = config.get('wjx').get('password')
+            data[i.attrs['name']] = config.config().readYaml().get('wjx').get('password')
         elif i.attrs['name'] == 'hfUserName':
             data[i.attrs['name']] = ''
         elif i.attrs['name'] == 'RememberMe':
@@ -67,67 +63,11 @@ def login():
             data[i.attrs['name']] = i.attrs['value']
     login = local_session.post(url=basepage.url, headers=headers, data=data)
     soup = BeautifulSoup(login.text, 'lxml')
-    if soup.find_all(text=config.get('wjx').get('username')):
+    if soup.find_all(text=config.config().readYaml().get('wjx').get('username')):
         local_session.cookies.save()
         print('用户名密码登录成功')
     else:
         print('登录失败'+soup.find(class_='submit-wrapper').span.text)
-
-
-
-# def url2Dict(url):
-#     query = urllib.parse.urlparse(url).query
-#     return dict([(k, v[0]) for k, v in urllib.parse.parse_qs(query).items()])
-#
-# def get_qiniu_image(url,studentname):
-#     cookie_login()
-#     img = 'static/uploads/'+studentname+'.jpg'  # 保存在本地的图片
-#     print(url)
-#     # basepage = local_session.get(url=url, headers=headers, verify=False)
-#     # headers['Referer']=url
-#     # print(basepage.encoding)
-#     # soup = BeautifulSoup(basepage.text, 'lxml')
-#     # new_url = "https://www.wjx.cn" + soup.find("a", {"id": "hrefDown"}).attrs['href']
-#     # # unqu_url = unquote(new_url,encoding='utf-8')
-#     # images = local_session.get(url=new_url, headers=headers, verify=False, )
-#     aa = local_session.get(url= url ,headers=headers ,allow_redirects=False)
-#     wjxurl = aa.next.url
-#     # wjxurl1 = unquote(wjxurl, 'utf-8')
-#     # wjxurl2 = urllib.parse.quote(wjxurl, 'utf-8')
-#     # wjxhttp = urllib3.PoolManager()  # 创建PoolManager对象生成请求, 由该实例对象处理与线程池的连接以及线程安全的所有细节
-#     # wjxresponse = wjxhttp.request('GET', url=wjxurl, headers=headers) # get方式请求
-#     request = urllib.request.Request(url=wjxurl)
-#     reponse = urllib.request.urlopen(request)
-#     jpg_ima = Image.open(BytesIO(reponse.read()))  # 打开图片
-#     jpg_ima = jpg_ima.convert('RGB')  # 去掉图片的A通道
-#     jpg_ima.save(img, "JPEG")  # 保存新的图片
-#     # local_session = requests.Session()
-#     # baseurl = 'https://www.wjx.cn/login.aspx'
-#     # loginpage = local_session.get(url=baseurl, headers = headers)
-#     # data = {}
-#     # soup = BeautifulSoup(loginpage.text, 'lxml')
-#     # # a = soup.findAll("input", {"type": "hidden"})
-#     # for i in soup.findAll("input"):
-#     #     if i.attrs['name'] == 'UserName':
-#     #         data[i.attrs['name']] = '18661636361'
-#     #     elif i.attrs['name'] == 'Password':
-#     #         data[i.attrs['name']] = 'savor,123'
-#     #     elif i.attrs['name'] == 'hfUserName':
-#     #         data[i.attrs['name']] = ''
-#     #     elif i.attrs['name'] == 'RememberMe':
-#     #         data[i.attrs['name']] = 'on'
-#     #     else:
-#     #         data[i.attrs['name']] = i.attrs['value']
-#     # login = local_session.post(url=loginpage.url, headers=headers, data=data)
-#     # img = 'static/uploads/'+studentname+'.jpg'  # 保存在本地的图片
-#     # basepage = local_session.get(url=url, headers = headers)
-#     # # data = {}
-#     # soup = BeautifulSoup(basepage.text, 'lxml')
-#     # images = local_session.get(url="https://www.wjx.cn/" + soup.find("a", {"id": "hrefDown"}).attrs['href'], headers=headers)
-#     # jpg_ima = Image.open(BytesIO(images.content))  # 打开图片
-#     # jpg_ima = jpg_ima.convert('RGB')  # 去掉图片的A通道
-#     # jpg_ima.save(img, "JPEG")  # 保存新的图片
-#     return img
 
 class CourseExcle(object):
     def __init__(self, file, tableid):
@@ -139,7 +79,9 @@ class CourseExcle(object):
         self.time = time
 
     def readCourseInfo(self,filetime):
-        all_student = config.get('classone').get('new_student_name')
+        all_student =config.config().readYaml().get('classone').get('new_student_name')
+        # print ('初始化列表：')
+        # print (all_student)
         repeat_list = {}  # 重复提交名单
         for i in range(1, self.rows):
             # print (type(all_student))
@@ -157,8 +99,10 @@ class CourseExcle(object):
                         all_student[j]['url'] = self.table.row_values(i)[7]
                         all_student[j]['status'] = 1
                         # print(i + 1)
-                # data[i]=dict(zip(['name','url'],[self.table.row_values(i)[6],self.table.row_values(i)[7]]))
+                        # data[i]=dict(zip(['name','url'],[self.table.row_values(i)[6],self.table.row_values(i)[7]]))
                         print(self.table.row_values(i)[6]+self.table.row_values(i)[7])
+        # print('加工完成列表：')
+        # print(all_student)
         return all_student,repeat_list
 
 
@@ -188,30 +132,56 @@ def download_image(url,name,false_list):
         max_retry += 1
     return img,false_list
 
-def get_excle(year,month,day):
+def get_excle(resultdate_str):
+    resultdate=datetime.datetime.strptime(resultdate_str, '%Y-%m-%d').date()
+    # print(resultdate)
     cookie_login()
-    exclepath = 'static/uploads/88015554_' + time.strftime("%Y%m%d%H%M%S", time.localtime()) + '.xlsx'
-    baseurl = config.get('wjx').get('excle_url')
+    exclepath = 'static/uploads/88015554_' + resultdate.isoformat() + '.xlsx'
+    baseurl = config.config().readYaml().get('wjx').get('excle_url')
     resultpage = local_session.get(url=baseurl, headers=headers)
     s = open(exclepath,'wb')
     s.write(resultpage.content)
     s.close()
     excle = CourseExcle(exclepath, 0)
-    result = excle.readCourseInfo(datetime.date(year,month,day))
+    result = excle.readCourseInfo(resultdate)
     all_student=result[0]
+    repeat_list=result[1]
     # 生成学生列表
     # 生成未提交学生列表
     student_list = {}
     undo_list = {}
-    false_list = []
     for i in all_student:
         if all_student[i]['status'] == 1:
             student_list[all_student[i]['name']] = all_student[i]['wjxid']  # 给student_list元组添加学生信息
         elif all_student[i]['status'] == 0:
             undo_list[all_student[i]['name']] = i
     # get_images(exclepath)
-    print('未提交名单:')
-    print(undo_list)
+    # print('未提交名单:')
+    # print(undo_list)
+    # print('提交名单:')
+    # print(student_list)
+    result_list = {}  # 返回结果至页面
+    result_list['student'] = student_list
+    result_list['repeat'] = repeat_list
+    result_list['undo'] = undo_list
+    result_list['student_size'] = len(student_list)
+    result_list['repeat_size'] = len(repeat_list)
+    result_list['undo_size'] = len(undo_list)
+    if result_list['undo_size']==0:
+        doc_info=generate_doc(resultdate,all_student)
+        result_list['filename'] = doc_info[0]
+        result_list['false'] = doc_info[1]
+        result_list['false_size'] = len(doc_info[1])
+    else:
+        result_list['filename'] = ''
+        result_list['false'] = ''
+        result_list['false_size'] = -1
+    # print('返回前端结果:')
+    # print(result_list)
+    return result_list
+
+def generate_doc(resultdate,all_student):
+    false_list = []
     # 下载健康码并保存为word
     doc = Document()
     doc.styles['Normal'].font.name = u'文星标宋'
@@ -231,30 +201,6 @@ def get_excle(year,month,day):
     print('失败列表：')
     print(false_list)
     downloadpath = 'static/download/'
-    downloadfilename = '三明路小一班健康码' + time.strftime("%Y%m%d", time.localtime()) + '.docx'
+    downloadfilename = '三明路小一班健康码' + resultdate.isoformat() + '.docx'
     doc.save(downloadpath + downloadfilename)  # 保存路径
-
-# def get_images(exclepath):
-#     excle = CourseExcle(exclepath, 0)
-#     result = excle.readCourseInfo(datetime.date(2020,9,27))
-#     all_student=result[0]
-#     # 生成学生列表
-#     # 生成未提交学生列表
-#     student_list = {}
-#     undo_list = {}
-#     for i in all_student:
-#         if all_student[i]['status'] == 1:
-#             student_list[all_student[i]['name']] = all_student[i]['wjxid']  # 给student_list元组添加学生信息
-#         elif all_student[i]['status'] == 0:
-#             undo_list[all_student[i]['name']] = i
-#     # 生成爬取地址列表，保存图片，返回下载地址
-#     for i in all_student:
-#         if all_student[i]['status'] == 1:
-#             # print (all_student[i]['name'])
-#             download_image(all_student[i]['url'], all_student[i]['name'])
-#             # done = executor.submit(download_image,all_student[i]['url'],session,all_student[i]['name'])
-#             # done.add_done_callback(read_data)
-#     print(undo_list)
-
-
-get_excle(2021,1,18)
+    return downloadfilename,false_list

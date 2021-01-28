@@ -23,14 +23,35 @@
 <div class="container theme-showcase" role="main">
     <div class="jumbotron">
         <h2>健康码上传</h2>
-        <p>点击选择文件按钮选择需要上传的图片压缩包或Excle后，点击上传并获取结果。</p>
-        <form action="" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" class="span3" style="float: left;">
-            <input type="submit" value="上传并处理" class="btn btn-success">
-        </form>
-        <h4>{{ get_flashed_messages()[0] }}</h4>
+        {% block head %}
+            {{ super() }}
+            <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+        {% endblock %}
+{#        <p>点击选择文件按钮选择需要上传的图片压缩包或Excle后，点击上传并获取结果。</p>#}
+{#        <form action="" method="post" enctype="multipart/form-data">#}
+{#            <input type="file" name="file" class="span3" style="float: left;">#}
+{#            <input type="submit" value="上传并处理" class="btn btn-success">#}
+{#        </form>#}
+{#        <h4>{{ get_flashed_messages()[0] }}</h4>#}
     </div>
 </div>
+{% block scripts %}
+    {{ super() }}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+    $('#date').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        daysOfWeekHighlighted: "0,6",
+        format: "yyyy/mm/dd",
+        language: "zh-CN"
+    });
+    </script>
+{% endblock %}
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="../static/js/bootstrap.min.js"></script>

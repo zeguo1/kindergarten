@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <link href="/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script src="/js/bootstrap-datepicker.min.js"></script>
+    <script src="/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript">
+        $('#datetimepicker').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",   // 汉化
+            autoclose: true,        // 自动关闭
+            todayBtn: "linked", // 点击可以回到今天
+            todayHighlight: true,   // 高亮当天
+            daysOfWeekDisabled: [0, 6],   //禁用周末
+            endDate: new Date(),   // 最大日期就是当天
+        }).datepicker("setDate", 'now')  // 设置默认日期;
+    </script>
+
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>小一班健康码查询</h1>
+        </div>
+    </div>
+    <div class="container">
+        {% block page_content %}
+            <form action="/result" style="text-align: center;">
+                <div class="input-daterange" id="datepicker">
+                    <span>查询日期：</span>
+                    <input type="text" class="input-small" name="start" id="datetimepicker"/>
+                    <button type="submit" value="查询">查询</button>
+                </div>
+            </form>
+        {% endblock %}
+    </div>
+{% endblock %}
+

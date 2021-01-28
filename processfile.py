@@ -23,6 +23,15 @@ import urllib
 # 1.从上传的压缩包中获取图片列表并获取人名及对应的文件名
 # 2.打开word，根据列表，填写题目，人名字和图片
 
+class AllList(object):
+    def __init__(self):
+        self.excle_list = {}
+        self.student_list = {}
+        self.undo_list = {}
+        self.repeat_list = {}
+        self.false_list = {}
+
+
 class CourseExcle(object):
     def __init__(self, file, tableid):
         self.book = xlrd.open_workbook(file)
@@ -33,13 +42,19 @@ class CourseExcle(object):
         self.time = time
 
     def readCourseInfo(self,filetime):
+        """
+        根据指定日期，从excle文件中获取已提交学生列表和重复提交学生列表
+        :param filetime:
+        :return:
+        """
         all_student = config.get('classone').get('new_student_name')
         repeat_list = {}  # 重复提交名单
         for i in range(1, self.rows):
             # print (type(all_student))
-            # print (datetime.datetime.strptime(self.table.row_values(i)[1],'%Y/%m/%d %H:%M:%S'))
+            # print (datetime.datetime.strptime(self.table.row_values(i)[1],'%Y/%m/%d %H:%M:%S').date())
             # print (filetime)
-            if datetime.datetime.strptime(self.table.row_values(i)[1],'%Y/%m/%d %H:%M:%S').date.__eq__(filetime):
+            # print (datetime.datetime.strptime(self.table.row_values(i)[1],'%Y/%m/%d %H:%M:%S').date().__eq__(filetime))
+            if datetime.datetime.strptime(self.table.row_values(i)[1],'%Y/%m/%d %H:%M:%S').date().__eq__(filetime):
                 for j in all_student:
                     if all_student[j]['name'] == self.table.row_values(i)[6]:
                         if all_student[j]['status'] == 1:
@@ -290,5 +305,5 @@ def get_excle_from_web():
     result_list['undo_size'] = len(undo_list)
     return result_list
 # download_image('https://www.wjx.cn/wjx/viewfile.aspx?path=https%3a%2f%2fpubuserqiniu.paperol.cn%2f88015554_44_q2_1598243790PYmaWK.jpg%3fattname%3d44_2_pt2020_08_24_12_10_55.jpg&activity=88015554')
-print (datetime.date(2020,10,5))
-get_excle_from_web()
+# print (datetime.date(2020,10,5))
+# get_excle_from_web()
