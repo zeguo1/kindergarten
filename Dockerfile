@@ -1,4 +1,4 @@
-FROM python:3.6.2
+FROM registry.cn-qingdao.aliyuncs.com/qy-dockerhub/python:3.6.2
 
 #RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai'>/etc/timezone
 
