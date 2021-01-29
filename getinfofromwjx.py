@@ -106,6 +106,14 @@ class CourseExcle(object):
         return all_student,repeat_list
 
 
+def del_file(path_data):
+    for i in os.listdir(path_data) :# os.listdir(path_data)#返回一个列表，里面是当前目录下面的所有东西的相对路径
+        file_data = path_data + "\\" + i#当前文件夹的下面的所有东西的绝对路径
+        if os.path.isfile(file_data) == True:#os.path.isfile判断是否为文件,如果是文件,就删除.如果是文件夹.递归给del_file.
+            os.remove(file_data)
+        else:
+            del_file(file_data)
+
 def download_image(url,name,false_list):
     # cookie_login()
     max_retry = 0
@@ -123,12 +131,13 @@ def download_image(url,name,false_list):
             jpg_ima = Image.open(BytesIO(reponse.read()))  # 打开图片
             jpg_ima = jpg_ima.convert('RGB')  # 去掉图片的A通道
             jpg_ima.save(img, "JPEG")  # 保存新的图片
+            false_list[name]=url  #测试
             print(name+'获取成功')
             return img,false_list
         except Exception as e:
             print('错误 ：', e)
             print(name+'获取失败')
-            false_list.append(name)
+            false_list[name]=url
         max_retry += 1
     return img,false_list
 
@@ -168,6 +177,8 @@ def get_excle(resultdate_str):
     result_list['repeat_size'] = len(repeat_list)
     result_list['undo_size'] = len(undo_list)
     if result_list['undo_size']==0:
+        del_file('static/uploads')
+        del_file('static/download')
         doc_info=generate_doc(resultdate,all_student)
         result_list['filename'] = doc_info[0]
         result_list['false'] = doc_info[1]
@@ -181,7 +192,7 @@ def get_excle(resultdate_str):
     return result_list
 
 def generate_doc(resultdate,all_student):
-    false_list = []
+    false_list = {}
     # 下载健康码并保存为word
     doc = Document()
     doc.styles['Normal'].font.name = u'文星标宋'

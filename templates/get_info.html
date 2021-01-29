@@ -14,7 +14,8 @@
                         <button type="button" class="btn btn-lg btn-primary">下载汇总文档</button>
                     </a>
                 {% else %}
-                    <p>小一班共计40人，其中已提交{{ result.student_size }}人，未提交{{ result.undo_size }}人，已经删除重复提交{{ result.repeat_size }}人。</p>
+                    <p>
+                        小一班共计40人，其中已提交{{ result.student_size }}人，未提交{{ result.undo_size }}人，已经删除重复提交{{ result.repeat_size }}人。</p>
                 {% endif %}
             </div>
             <div class="row">
@@ -41,7 +42,7 @@
                         </thead>
                     </table>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="page-header">
                         <h3>删除重复提交学生名单({{ result.repeat_size }}人)</h3>
                     </div>
@@ -60,24 +61,47 @@
                         </thead>
                     </table>
                 </div>
-                <div class="col-md-3">
-                    <div class="page-header">
-                        <h3>未提交学生名单({{ result.undo_size }}人)</h3>
-                    </div>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>未提交学生姓名</th>
-                        </tr>
-                        {% for key, value in result.undo.items() %}
+                {% if result.undo_size ==0 %}
+                    <div class="col-md-4">
+                        <div class="page-header">
+                            <h3>获取图片失败学生名单({{ result.false_size }}人)</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <th> {{ key }} </th>
+                                <th>获取图片失败学生姓名</th>
                             </tr>
-                        {% endfor %}
-                        </thead>
-                    </table>
-                </div>
-
+                            {% for key, value in result.false.items() %}
+                                <tr>
+                                    <th>
+                                        <a href="{{ value }}">
+                                            {{ key }}
+                                        </a>
+                                    </th>
+                                </tr>
+                            {% endfor %}
+                            </thead>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="col-md-4">
+                        <div class="page-header">
+                            <h3>未提交学生名单({{ result.undo_size }}人)</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>未提交学生姓名</th>
+                            </tr>
+                            {% for key, value in result.undo.items() %}
+                                <tr>
+                                    <th> {{ key }} </th>
+                                </tr>
+                            {% endfor %}
+                            </thead>
+                        </table>
+                    </div>
+                {% endif %}
             </div>
         {% endblock %}
     </div>
