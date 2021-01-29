@@ -131,7 +131,6 @@ def download_image(url,name,false_list):
             jpg_ima = Image.open(BytesIO(reponse.read()))  # 打开图片
             jpg_ima = jpg_ima.convert('RGB')  # 去掉图片的A通道
             jpg_ima.save(img, "JPEG")  # 保存新的图片
-            false_list[name]=url  #测试
             print(name+'获取成功')
             return img,false_list
         except Exception as e:
