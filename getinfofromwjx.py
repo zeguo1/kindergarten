@@ -202,7 +202,7 @@ def generate_doc(resultdate,all_student):
     doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'文星标宋')
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER  # 居中
-    run = p.add_run('小一班学生及同住人健康码')
+    run = p.add_run('中一班学生及同住人健康码')
     run.font.size = Pt(18)
     for i in all_student:
         if all_student[i]['status'] == 1:
@@ -215,6 +215,6 @@ def generate_doc(resultdate,all_student):
     print('失败列表：')
     print(false_list)
     downloadpath = 'static/download/'
-    downloadfilename = '三明路小一班健康码' + resultdate.isoformat() + '.docx'
+    downloadfilename = '三明路中一班健康码' + resultdate.isoformat() + '_' + str(int(time.time())) + '.docx'
     doc.save(downloadpath + downloadfilename)  # 保存路径
     return downloadfilename,false_list
